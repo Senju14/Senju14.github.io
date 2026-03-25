@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <h3 class="sidebar-title">Contents</h3>
+            <nav class="toc">
+                <a href="#about">About</a>
+                <a href="#education">Education</a>
+                <a href="#experience">Experience</a>
+                <a href="#projects">Featured Projects</a>
+                <a href="#awards">Honors & Awards</a>
+                <a href="#skills">Skills</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="stat-item">
+                    <img src="https://visitor-badge.laobi.icu/badge?page_id=Senju14.github.io" alt="visitor badge" class="visitor-badge">
+                </div>
+                <div class="stat-item">
+                    <i class="fa-regular fa-clock"></i> Last updated: Mar 25, 2026
+                </div>
+            </div>
+
+            <header>
+                <h1>NGUYEN NHAT HUY</h1>
+                <div class="subtitle">AI / Machine Learning Engineer</div>
+                <div class="location">Ho Chi Minh City, Vietnam</div>
+                
+                <div class="social-links">
+                    <a href="mailto:huynguyenwork14@gmail.com" title="Click to send email" class="email-link">huynguyenwork14@gmail.com <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i></a>
+                    <a href="https://linkedin.com/in/huy-nguyen14/" target="_blank" rel="noopener noreferrer" title="Click to open LinkedIn" class="icon-linkedin"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://github.com/Senju14" target="_blank" rel="noopener noreferrer" title="Click to open GitHub" class="icon-github"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://huggingface.co/522H0134-NguyenNhatHuy" target="_blank" rel="noopener noreferrer" title="Click to open Hugging Face" class="icon-hf">
+                        <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Hugging Face">
+                    </a>
+                </div>
+            </header>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="openTab(event, 'Bio')">Bio</button>
+                <button class="tab-btn" onclick="openTab(event, 'Blog')">Blog</button>
+            </div>
+
+            <div id="Bio" class="tab-content active-tab">
+                <section id="about">
+                    <h2>About</h2>
+                    <p>Computer Science student at Ton Duc Thang University with a strong foundation in Python, Machine Learning, and NLP. Passionate about researching and building real-world AI applications, specializing in model fine-tuning, RAG architectures, and scalable system integration.</p>
+                </section>
+
+                <section id="education">
+                    <h2>Education</h2>
+                    <div class="item">
+                        <div class="item-header">
+                            <span class="item-title">Bachelor of Computer Science | Ton Duc Thang University</span>
+                            <span class="item-meta">Oct 2022 – May 2026</span>
+                        </div>
+                        <ul>
+                            <li><strong>GPA:</strong> 3.18/4.00</li>
+                            <li><strong>Awards:</strong> Academic Promotion Scholarship (Semester 2, 2025)</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="experience">
+                    <h2>Experience</h2>
+                    <div class="item">
+                        <div class="item-header">
+                            <span class="item-title"><a href="https://www.nng.com.vn/blog/welcoming-the-emba-from-foster-school-of-business-at-the-university-of-washington" target="_blank" rel="noopener noreferrer" class="ext-link" title="Click to open external link">AI Intern | NNG Company Limited <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i></a></span>
+                            <span class="item-meta">Aug 2025 – Oct 2025</span>
+                        </div>
+                        <ul>
+                            <li>Researched and explored Retrieval-Augmented Generation (RAG) architectures and their practical applications in business contexts.</li>
+                            <li>Engaged in professional software development workflows and corporate training sessions.</li>
+                        </ul>
+                    </div>
+                    <div class="item">
+                        <div class="item-header">
+                            <span class="item-title"><a href="https://sportplus.vn/" target="_blank" rel="noopener noreferrer" class="ext-link" title="Click to open external link">AI Intern | SPORTPLUS JSC <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i></a></span>
+                            <span class="item-meta">Jun 2025 – Jul 2025</span>
+                        </div>
+                        <ul>
+                            <li>Developed a data crawling tool using Python to extract player performance scores from the DUPR sports application.</li>
+                            <li>Processed and structured extracted raw data to align with machine learning preprocessing requirements.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="projects">
+                    <h2>Featured Projects</h2>
+                    <div class="item">
+                        <div class="item-header">
+                            <span class="item-title"><a href="https://github.com/Senju14/Speech_to_text-realtime-for-lecture-hall" target="_blank" rel="noopener noreferrer" class="ext-link" title="Click to open project link">Bilingual Real-Time Speech-to-Text System <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i></a></span>
+                            <span class="item-meta">Thesis / Academic Research</span>
+                        </div>
+                        <ul>
+                            <li>Building a real-time academic lecture transcription and translation application (Vietnamese/English) advised by Assoc. Prof. Dr. Le Anh Cuong.</li>
+                            <li>Developing a live audio streaming pipeline utilizing FastAPI, WebSockets, and Silero VAD for efficient audio segmentation.</li>
+                            <li>Integrating WhisperX and NLLB models, deploying on Modal serverless GPUs for high-speed inference.</li>
+                        </ul>
+                    </div>
+                    <div class="item">
+                        <div class="item-header">
+                            <span class="item-title"><a href="https://github.com/Senju14/agentic-rag-001" target="_blank" rel="noopener noreferrer" class="ext-link" title="Click to open project link">Agentic RAG System <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i></a></span>
+                            <span class="item-meta">Aug 2025 – Oct 2025</span>
+                        </div>
+                        <ul>
+                            <li>Engineered a multi-agent retrieval system to process, search, and answer complex queries from business documents.</li>
+                            <li>Utilized Pinecone vector database and Knowledge Graphs to optimize text chunk storage and retrieval accuracy.</li>
+                        </ul>
+                    </div>
+                    <div class="item">
+                        <div class="item-header">
+                            <span class="item-title"><a href="https://github.com/Senju14/re-shopping-cart-website" target="_blank" rel="noopener noreferrer" class="ext-link" title="Click to open project link">Re Shopping Cart Website <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i></a></span>
+                            <span class="item-meta">Personal Web Project</span>
+                        </div>
+                        <ul>
+                            <li>Built an e-commerce shopping cart website with a responsive frontend and product flow optimization.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="awards">
+                    <h2>Honors & Awards</h2>
+                    <div class="item">
+                        <div class="item-header">
+                            <span class="item-title"><a href="https://it.tdtu.edu.vn/truong-dai-hoc-ton-duc-thang-dat-giai-nhi-tai-olympic-tri-tue-nhan-tao-sinh-vien-viet-nam-lan-thu" target="_blank" rel="noopener noreferrer" class="ext-link" title="Click to open award link">Second Prize | Vietnam Student AI Olympiad <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i></a></span>
+                            <span class="item-meta">2025</span>
+                        </div>
+                        <ul>
+                            <li>Demonstrated advanced logical thinking and practical problem-solving in a highly competitive national-level AI modeling competition.</li>
+                        </ul>
+                    </div>
+                    <div class="item">
+                        <div class="item-header">
+                            <span class="item-title"><a href="https://it.tdtu.edu.vn/trien-lam2425/17" target="_blank" rel="noopener noreferrer" class="ext-link" title="Click to open award link">Scientific Research Award | Ton Duc Thang University <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i></a></span>
+                            <span class="item-meta">2024</span>
+                        </div>
+                        <ul>
+                            <li>Recognized for outstanding NLP research by building a Vietnamese Tourism Q&A dataset (SQUAD 2.0 format).</li>
+                            <li>Fine-tuned RoBERTa and PhoBERT models to enhance machine reading comprehension performance.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="skills">
+                    <h2>Skills</h2>
+                    <div class="skills-grid">
+                        <span class="skill-category">Languages:</span>
+                        <span>Python, Java, SQL</span>
+                    </div>
+                    <div class="skills-grid">
+                        <span class="skill-category">AI & ML:</span>
+                        <span>PyTorch, Hugging Face, NLP (WhisperX, NLLB, LLMs), Computer Vision, RAG, Multi-Agent Systems</span>
+                    </div>
+                    <div class="skills-grid">
+                        <span class="skill-category">Web & APIs:</span>
+                        <span>FastAPI, Spring Boot, WebSockets, RESTful APIs, HTML/CSS</span>
+                    </div>
+                    <div class="skills-grid">
+                        <span class="skill-category">Cloud & DevOps:</span>
+                        <span>AWS, Modal, Docker, Git, GitHub Actions (CI/CD)</span>
+                    </div>
+                </section>
+            </div>
+
+            <div id="Blog" class="tab-content">
+                <section>
+                    <h2>Articles & Thoughts</h2>
+                    <p style="color: var(--secondary-text); margin-top: 20px;">
+                        <i class="fa-solid fa-code-branch"></i> Currently researching and experimenting. Content will be updated soon...
+                    </p>
+                </section>
+            </div>
+
+            <footer>
+                <p>&copy; 2026 Nguyen Nhat Huy. All rights reserved.</p>
+            </footer>
+
+        </main>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active-tab");
+            }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            document.getElementById(tabName).classList.add("active-tab");
+            evt.currentTarget.className += " active";
+        }
+    </script>
+</body>
+</html>
