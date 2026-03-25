@@ -27,11 +27,17 @@
 
         <main class="main-content">
             <div class="top-bar">
-                <div class="stat-item">
-                    <img src="https://visitor-badge.laobi.icu/badge?page_id=Senju14.github.io" alt="visitor badge" class="visitor-badge">
-                </div>
-                <div class="stat-item">
-                    <i class="fa-regular fa-clock"></i> Last updated: Mar 25, 2026
+                <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-label="Toggle sidebar" aria-expanded="true" title="Show or hide contents sidebar">
+                    <i class="fa-solid fa-bars"></i>
+                    <span>Contents</span>
+                </button>
+                <div class="top-bar-right">
+                    <div class="stat-item">
+                        <img src="https://visitor-badge.laobi.icu/badge?page_id=Senju14.github.io" alt="visitor badge" class="visitor-badge">
+                    </div>
+                    <div class="stat-item">
+                        <i class="fa-regular fa-clock"></i> Last updated: Mar 25, 2026
+                    </div>
                 </div>
             </div>
 
@@ -107,7 +113,7 @@
                             <span class="item-meta">Thesis / Academic Research</span>
                         </div>
                         <ul>
-                            <li>Building a real-time academic lecture transcription and translation application (Vietnamese/English) advised by Assoc. Prof. Dr. Le Anh Cuong.</li>
+                            <li>Building a real-time academic lecture transcription and translation application (Vietnamese/English).</li>
                             <li>Developing a live audio streaming pipeline utilizing FastAPI, WebSockets, and Silero VAD for efficient audio segmentation.</li>
                             <li>Integrating WhisperX and NLLB models, deploying on Modal serverless GPUs for high-speed inference.</li>
                         </ul>
@@ -192,6 +198,7 @@
 
         </main>
     </div>
+    <div id="sidebarOverlay" class="sidebar-overlay" aria-hidden="true"></div>
 
     <script>
         function openTab(evt, tabName) {
@@ -209,6 +216,63 @@
             document.getElementById(tabName).classList.add("active-tab");
             evt.currentTarget.className += " active";
         }
+
+        (function () {
+            var body = document.body;
+            var sidebar = document.querySelector('.sidebar');
+            var sidebarToggle = document.getElementById('sidebarToggle');
+            var sidebarOverlay = document.getElementById('sidebarOverlay');
+            var tocLinks = document.querySelectorAll('.toc a');
+            var mobileMediaQuery = window.matchMedia('(max-width: 850px)');
+
+            if (!sidebar || !sidebarToggle || !sidebarOverlay) {
+                return;
+            }
+
+            function isMobile() {
+                return mobileMediaQuery.matches;
+            }
+
+            function setExpandedState(expanded) {
+                sidebarToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+            }
+
+            function closeMobileSidebar() {
+                body.classList.remove('sidebar-open');
+                setExpandedState(false);
+            }
+
+            sidebarToggle.addEventListener('click', function () {
+                if (isMobile()) {
+                    var willOpen = !body.classList.contains('sidebar-open');
+                    body.classList.toggle('sidebar-open', willOpen);
+                    setExpandedState(willOpen);
+                    return;
+                }
+
+                body.classList.toggle('sidebar-collapsed');
+                setExpandedState(!body.classList.contains('sidebar-collapsed'));
+            });
+
+            sidebarOverlay.addEventListener('click', closeMobileSidebar);
+
+            for (var i = 0; i < tocLinks.length; i++) {
+                tocLinks[i].addEventListener('click', function () {
+                    if (isMobile()) {
+                        closeMobileSidebar();
+                    }
+                });
+            }
+
+            window.addEventListener('resize', function () {
+                if (!isMobile()) {
+                    body.classList.remove('sidebar-open');
+                    setExpandedState(!body.classList.contains('sidebar-collapsed'));
+                } else {
+                    setExpandedState(body.classList.contains('sidebar-open'));
+                }
+            });
+        })();
     </script>
 </body>
 </html>
