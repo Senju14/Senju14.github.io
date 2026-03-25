@@ -19,7 +19,7 @@
                 <a href="#about">About</a>
                 <a href="#education">Education</a>
                 <a href="#experience">Experience</a>
-                <a href="#projects">Featured Projects</a>
+                <a href="#projects">Projects</a>
                 <a href="#awards">Honors & Awards</a>
                 <a href="#skills">Skills</a>
             </nav>
@@ -27,17 +27,11 @@
 
         <main class="main-content">
             <div class="top-bar">
-                <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-label="Toggle sidebar" aria-expanded="true" title="Show or hide contents sidebar">
-                    <i class="fa-solid fa-bars"></i>
-                    <span>Contents</span>
-                </button>
-                <div class="top-bar-right">
-                    <div class="stat-item">
-                        <img src="https://visitor-badge.laobi.icu/badge?page_id=Senju14.github.io" alt="visitor badge" class="visitor-badge">
-                    </div>
-                    <div class="stat-item">
-                        <i class="fa-regular fa-clock"></i> Last updated: Mar 25, 2026
-                    </div>
+                <div class="stat-item">
+                    <img src="https://visitor-badge.laobi.icu/badge?page_id=Senju14.github.io" alt="visitor badge" class="visitor-badge">
+                </div>
+                <div class="stat-item">
+                    <i class="fa-regular fa-clock"></i> Last updated: Mar 25, 2026
                 </div>
             </div>
 
@@ -106,7 +100,7 @@
                 </section>
 
                 <section id="projects">
-                    <h2>Featured Projects</h2>
+                    <h2>Projects</h2>
                     <div class="item">
                         <div class="item-header">
                             <span class="item-title"><a href="https://github.com/Senju14/Speech_to_text-realtime-for-lecture-hall" target="_blank" rel="noopener noreferrer" class="ext-link" title="Click to open project link">Bilingual Real-Time Speech-to-Text System <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i></a></span>
@@ -130,11 +124,20 @@
                     </div>
                     <div class="item">
                         <div class="item-header">
-                            <span class="item-title"><a href="https://github.com/Senju14/re-shopping-cart-website" target="_blank" rel="noopener noreferrer" class="ext-link" title="Click to open project link">Re Shopping Cart Website <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i></a></span>
-                            <span class="item-meta">Personal Web Project</span>
+                            <span class="item-title"><a href="https://github.com/Senju14/vi-vqa-animals" target="_blank" rel="noopener noreferrer" class="ext-link" title="Click to open project link">VI-VQA Animals <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i></a></span>
+                            <span class="item-meta">Deep Learning</span>
                         </div>
                         <ul>
-                            <li>Built an e-commerce shopping cart website with a responsive frontend and product flow optimization.</li>
+                            <li>Developed a Vietnamese visual question answering project focused on animal understanding tasks.</li>
+                        </ul>
+                    </div>
+                        <div class="item">
+                        <div class="item-header">
+                            <span class="item-title"><a href="https://github.com/Senju14/re-shopping-cart-website" target="_blank" rel="noopener noreferrer" class="ext-link" title="Click to open project link">Re Shopping Cart Website <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i></a></span>
+                            <span class="item-meta">Rikkei Seminar</span>
+                        </div>
+                        <ul>
+                            <li>Learn CI/CD, Github Actions, Docker.</li>
                         </ul>
                     </div>
                 </section>
@@ -198,7 +201,9 @@
 
         </main>
     </div>
-    <div id="sidebarOverlay" class="sidebar-overlay" aria-hidden="true"></div>
+    <button id="goTopBtn" class="go-top-btn" type="button" aria-label="Go to top" title="Go to top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
 
     <script>
         function openTab(evt, tabName) {
@@ -218,60 +223,24 @@
         }
 
         (function () {
-            var body = document.body;
-            var sidebar = document.querySelector('.sidebar');
-            var sidebarToggle = document.getElementById('sidebarToggle');
-            var sidebarOverlay = document.getElementById('sidebarOverlay');
-            var tocLinks = document.querySelectorAll('.toc a');
-            var mobileMediaQuery = window.matchMedia('(max-width: 850px)');
+            var goTopBtn = document.getElementById('goTopBtn');
 
-            if (!sidebar || !sidebarToggle || !sidebarOverlay) {
+            if (!goTopBtn) {
                 return;
             }
 
-            function isMobile() {
-                return mobileMediaQuery.matches;
+            function updateGoTopButton() {
+                var showOnMobile = window.innerWidth <= 850 && window.scrollY > 220;
+                goTopBtn.classList.toggle('show', showOnMobile);
             }
 
-            function setExpandedState(expanded) {
-                sidebarToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-            }
-
-            function closeMobileSidebar() {
-                body.classList.remove('sidebar-open');
-                setExpandedState(false);
-            }
-
-            sidebarToggle.addEventListener('click', function () {
-                if (isMobile()) {
-                    var willOpen = !body.classList.contains('sidebar-open');
-                    body.classList.toggle('sidebar-open', willOpen);
-                    setExpandedState(willOpen);
-                    return;
-                }
-
-                body.classList.toggle('sidebar-collapsed');
-                setExpandedState(!body.classList.contains('sidebar-collapsed'));
+            goTopBtn.addEventListener('click', function () {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
 
-            sidebarOverlay.addEventListener('click', closeMobileSidebar);
-
-            for (var i = 0; i < tocLinks.length; i++) {
-                tocLinks[i].addEventListener('click', function () {
-                    if (isMobile()) {
-                        closeMobileSidebar();
-                    }
-                });
-            }
-
-            window.addEventListener('resize', function () {
-                if (!isMobile()) {
-                    body.classList.remove('sidebar-open');
-                    setExpandedState(!body.classList.contains('sidebar-collapsed'));
-                } else {
-                    setExpandedState(body.classList.contains('sidebar-open'));
-                }
-            });
+            window.addEventListener('scroll', updateGoTopButton);
+            window.addEventListener('resize', updateGoTopButton);
+            updateGoTopButton();
         })();
     </script>
 </body>
