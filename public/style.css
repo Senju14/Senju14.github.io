@@ -138,6 +138,118 @@ h1 {
     color: var(--secondary-text);
     margin-bottom: 8px;
     font-weight: 500;
+    min-height: 28px; /* Prevents layout shift during typing */
+}
+
+.subtitle .cursor {
+    display: inline-block;
+    width: 2px;
+    background-color: var(--text-color);
+    margin-left: 2px;
+    animation: blink 1s infinite;
+    vertical-align: middle;
+    height: 1.2rem;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.hf-space-wrapper {
+    margin-top: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    background: var(--bg-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.hf-space-wrapper iframe {
+    width: 100%;
+    height: 400px;
+    border: none;
+    display: block;
+}
+
+/* Google AI Style Blog */
+.blog-post {
+    max-width: 680px;
+    margin: 0 auto 50px;
+}
+
+.blog-header {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.blog-category {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--link-hover);
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.blog-title {
+    font-size: 2.2rem;
+    line-height: 1.3;
+    margin-bottom: 15px;
+    color: var(--text-color);
+    border: none;
+}
+
+.blog-meta {
+    font-size: 0.9rem;
+    color: var(--secondary-text);
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    align-items: center;
+}
+
+.blog-content {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--text-color);
+}
+
+.blog-content p {
+    margin-bottom: 20px;
+    color: inherit;
+}
+
+.blog-content h3 {
+    margin-top: 40px;
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+}
+
+.blog-media {
+    margin: 35px 0 10px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.blog-media img, .blog-media video, .blog-media iframe {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.blog-media iframe {
+    aspect-ratio: 16 / 9;
+}
+
+.media-caption {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--secondary-text);
+    margin-bottom: 35px;
+    font-style: italic;
 }
 
 .location {

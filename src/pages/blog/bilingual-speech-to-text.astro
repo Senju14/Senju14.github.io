@@ -1,0 +1,58 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Bilingual Speech-to-Text | Blog" currentTab="Blog">
+    <div class="tab-content active-tab" style="display: block;">
+        
+        <a href="/blog" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to articles</a>
+
+        <article class="blog-post">
+            <header class="blog-header">
+                <span class="blog-category">Deep Learning</span>
+                <h2 class="blog-title">Scaling Bilingual Speech-to-Text on Serverless GPUs</h2>
+                <div class="blog-meta">
+                    <span><i class="fa-regular fa-calendar"></i> Apr 15, 2026</span>
+                    <span><i class="fa-regular fa-clock"></i> 7 min read</span>
+                </div>
+            </header>
+            
+            <div class="blog-content">
+                <p>Deploying real-time machine learning models for transcription and translation is a complex engineering challenge, specifically when aiming for low latency and high accuracy across multiple languages like Vietnamese and English.</p>
+                
+                <p>In this post, I detail how we approached the <strong>Bilingual Real-Time Speech-to-Text System</strong> for academic lecture halls, leveraging state-of-the-art models and serverless infrastructure.</p>
+                
+                <h3>The Processing Pipeline</h3>
+                <p>The core pipeline consists of three major stages:</p>
+                <ul>
+                    <li><strong>Voice Activity Detection (VAD):</strong> We utilized Silero VAD to cleanly segment continuous audio streams. This drastically reduced the computational load by ignoring silent segments.</li>
+                    <li><strong>Transcription:</strong> Segmented audio chunks are passed to WhisperX. WhisperX ensures high accuracy and provides word-level timestamps.</li>
+                    <li><strong>Translation:</strong> The transcribed text is then piped into Meta's NLLB (No Language Left Behind) model to provide accurate cross-lingual translations.</li>
+                </ul>
+
+                <h3>Overcoming Serverless Cold Starts</h3>
+                <p>One of the biggest hurdles was managing the cold starts on serverless platforms. By containerizing our models with Docker and utilizing <strong>Modal's A100 GPU infrastructure</strong>, we achieved sub-second cold starts and blazingly fast inference times, making real-time streaming viable.</p>
+
+                <h3>Integration via WebSockets</h3>
+                <p>To connect the frontend React application with our Python backend, we implemented a robust WebSocket connection. This ensures bi-directional, low-latency communication, allowing the transcribed text to appear on the user's screen almost instantaneously as the professor speaks.</p>
+            </div>
+        </article>
+
+    </div>
+</Layout>
+
+<style>
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--secondary-text);
+        text-decoration: none;
+        margin-bottom: 30px;
+        font-weight: 500;
+        transition: color 0.2s;
+    }
+    .back-link:hover {
+        color: var(--text-color);
+    }
+</style>

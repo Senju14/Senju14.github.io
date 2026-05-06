@@ -76,7 +76,7 @@
 
             <header>
                 <h1>NGUYEN NHAT HUY</h1>
-                <div class="subtitle">AI / Machine Learning Engineer</div>
+                <div class="subtitle"><span id="typewriter"></span><span class="cursor"></span></div>
                 <div class="location">Ho Chi Minh City, Vietnam</div>
                 
                 <div class="social-links">
@@ -169,6 +169,10 @@
                         <ul>
                             <li>Developed a Vietnamese visual question answering project focused on animal understanding tasks.</li>
                         </ul>
+                        <!-- Nhúng Hugging Face Space -->
+                        <div class="hf-space-wrapper">
+                            <iframe src="https://huggingface.co/spaces/Senju14/vi-vqa-animals" title="Hugging Face Space" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
                     </div>
                         <div class="item">
                         <div class="item-header">
@@ -226,12 +230,39 @@
             </div>
 
             <div id="Blog" class="tab-content">
-                <section>
-                    <h2>Articles & Thoughts</h2>
-                    <p style="color: var(--secondary-text); margin-top: 20px;">
-                        <i class="fa-solid fa-code-branch"></i> Currently researching and experimenting. Content will be updated soon...
-                    </p>
-                </section>
+                <article class="blog-post">
+                    <header class="blog-header">
+                        <span class="blog-category">System Architecture</span>
+                        <h2 class="blog-title">Building an Agentic RAG System for Enterprise Documents</h2>
+                        <div class="blog-meta">
+                            <span><i class="fa-regular fa-calendar"></i> May 6, 2026</span>
+                            <span><i class="fa-regular fa-clock"></i> 5 min read</span>
+                        </div>
+                    </header>
+                    
+                    <div class="blog-content">
+                        <p>Retrieval-Augmented Generation (RAG) has become the standard for grounding Large Language Models (LLMs) in proprietary data. However, standard RAG pipelines often struggle with complex, multi-hop reasoning queries. To address this, I engineered an <strong>Agentic RAG System</strong>.</p>
+                        
+                        <p>Unlike traditional linear retrieval, an Agentic approach empowers the LLM to act as a reasoning engine. It can dynamically decide <em>what</em> to search, <em>when</em> to use a vector database, and <em>how</em> to synthesize information from a Knowledge Graph.</p>
+                        
+                        <div class="blog-media">
+                            <img src="assets/rag_architecture.png" alt="Agentic RAG Architecture Diagram" loading="lazy">
+                        </div>
+                        <div class="media-caption">Figure 1: High-level architecture of the Agentic RAG pipeline integrating Pinecone and Knowledge Graphs.</div>
+                        
+                        <h3>The Power of Multi-Agent Collaboration</h3>
+                        <p>By dividing the cognitive load among specialized agents (e.g., a Document Retriever Agent, a Summarizer Agent, and a Code Generator Agent), the system achieves significantly higher accuracy. We utilized Pinecone for high-dimensional vector similarity search, enabling sub-millisecond retrieval across millions of text chunks.</p>
+
+                        <div class="blog-media">
+                            <!-- Placeholder cho Video YouTube mô phỏng Demo -->
+                            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Agentic RAG Demo Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="media-caption">Video 1: Live demonstration of the multi-agent system resolving a complex business query.</div>
+                        
+                        <h3>Next Steps</h3>
+                        <p>The next iteration will focus on reducing inference latency by deploying smaller, fine-tuned embedding models on Modal serverless GPUs, mirroring the success of my previous bilingual speech-to-text project.</p>
+                    </div>
+                </article>
             </div>
 
             <footer>
@@ -322,6 +353,43 @@
             section.classList.add('fade-in-section');
             observer.observe(section);
         });
+
+        // Typewriter Effect
+        const roles = ["AI / Machine Learning Engineer", "NLP Researcher", "RAG System Developer", "Data Scientist"];
+        let roleIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typewriterElement = document.getElementById("typewriter");
+
+        function type() {
+            const currentRole = roles[roleIndex];
+            
+            if (isDeleting) {
+                typewriterElement.textContent = currentRole.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typewriterElement.textContent = currentRole.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === currentRole.length) {
+                typeSpeed = 2000; // Pause at end
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                roleIndex = (roleIndex + 1) % roles.length;
+                typeSpeed = 500; // Pause before new word
+            }
+
+            setTimeout(type, typeSpeed);
+        }
+
+        // Start typing effect
+        if (typewriterElement) {
+            setTimeout(type, 1000);
+        }
     </script>
 </body>
 </html>

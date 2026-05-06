@@ -1,0 +1,61 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Agentic RAG System | Blog" currentTab="Blog">
+    <div class="tab-content active-tab" style="display: block;">
+        
+        <a href="/blog" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to articles</a>
+
+        <article class="blog-post">
+            <header class="blog-header">
+                <span class="blog-category">System Architecture</span>
+                <h2 class="blog-title">Building an Agentic RAG System for Enterprise Documents</h2>
+                <div class="blog-meta">
+                    <span><i class="fa-regular fa-calendar"></i> May 6, 2026</span>
+                    <span><i class="fa-regular fa-clock"></i> 5 min read</span>
+                </div>
+            </header>
+            
+            <div class="blog-content">
+                <p>Retrieval-Augmented Generation (RAG) has become the standard for grounding Large Language Models (LLMs) in proprietary data. However, standard RAG pipelines often struggle with complex, multi-hop reasoning queries. To address this, I engineered an <strong>Agentic RAG System</strong>.</p>
+                
+                <p>Unlike traditional linear retrieval, an Agentic approach empowers the LLM to act as a reasoning engine. It can dynamically decide <em>what</em> to search, <em>when</em> to use a vector database, and <em>how</em> to synthesize information from a Knowledge Graph.</p>
+                
+                <div class="blog-media">
+                    <img src="/assets/rag_architecture.png" alt="Agentic RAG Architecture Diagram" loading="lazy">
+                </div>
+                <div class="media-caption">Figure 1: High-level architecture of the Agentic RAG pipeline integrating Pinecone and Knowledge Graphs.</div>
+                
+                <h3>The Power of Multi-Agent Collaboration</h3>
+                <p>By dividing the cognitive load among specialized agents (e.g., a Document Retriever Agent, a Summarizer Agent, and a Code Generator Agent), the system achieves significantly higher accuracy. We utilized Pinecone for high-dimensional vector similarity search, enabling sub-millisecond retrieval across millions of text chunks.</p>
+
+                <div class="blog-media">
+                    <!-- IBM Technology RAG explanation video -->
+                    <iframe src="https://www.youtube.com/embed/T-D1OfcDW1M" title="Agentic RAG Demo Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="media-caption">Video 1: Overview of Retrieval-Augmented Generation (RAG) Architecture.</div>
+                
+                <h3>Next Steps</h3>
+                <p>The next iteration will focus on reducing inference latency by deploying smaller, fine-tuned embedding models on Modal serverless GPUs, mirroring the success of my previous bilingual speech-to-text project.</p>
+            </div>
+        </article>
+
+    </div>
+</Layout>
+
+<style>
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--secondary-text);
+        text-decoration: none;
+        margin-bottom: 30px;
+        font-weight: 500;
+        transition: color 0.2s;
+    }
+    .back-link:hover {
+        color: var(--text-color);
+    }
+</style>

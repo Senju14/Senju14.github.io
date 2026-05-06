@@ -1,0 +1,212 @@
+---
+export interface Props {
+	title: string;
+	currentTab: string;
+}
+
+const { title, currentTab } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio of Nguyen Nhat Huy - AI/Machine Learning Engineer">
+    
+    <!-- Security Headers for GitHub Pages -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self'; frame-src https://www.youtube.com https://*.hf.space;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <script is:inline>
+        if (window.top !== window.self) { window.top.location = window.self.location; }
+    </script>
+
+    <!-- SEO & Open Graph Tags -->
+    <meta property="og:title" content="Nguyen Nhat Huy - AI / Machine Learning Engineer">
+    <meta property="og:description" content="Portfolio of Nguyen Nhat Huy. Passionate about researching and building real-world AI applications, specializing in model fine-tuning and RAG architectures.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://senju14.github.io/">
+    <meta property="og:image" content="https://visitor-badge.laobi.icu/badge?page_id=Senju14.github.io">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👨‍💻</text></svg>">
+
+    <title>{title}</title>
+
+    <script is:inline>
+        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        if (savedTheme === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
+    <link rel="stylesheet" href="/style.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <h3 class="sidebar-title">Contents</h3>
+            <nav class="toc">
+                {currentTab === 'Bio' ? (
+                    <>
+                        <a href="#about">About</a>
+                        <a href="#education">Education</a>
+                        <a href="#experience">Experience</a>
+                        <a href="#projects">Projects</a>
+                        <a href="#awards">Honors & Awards</a>
+                        <a href="#skills">Skills</a>
+                    </>
+                ) : (
+                    <a href="/">&larr; Back to Bio</a>
+                )}
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="stat-item">
+                    <img src="https://visitor-badge.laobi.icu/badge?page_id=Senju14.github.io" alt="visitor badge" class="visitor-badge">
+                </div>
+                <div class="stat-item">
+                    <i class="fa-regular fa-clock"></i> Last updated: Mar 25, 2026
+                </div>
+                <button id="darkModeToggle" class="theme-toggle" aria-label="Toggle Dark Mode" title="Toggle Dark Mode">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+
+            <header>
+                <h1>NGUYEN NHAT HUY</h1>
+                <div class="subtitle"><span id="typewriter"></span><span class="cursor"></span></div>
+                <div class="location">Ho Chi Minh City, Vietnam</div>
+                
+                <div class="social-links">
+                    <a href="mailto:huynguyenwork14@gmail.com" title="Click to send email" class="email-link">huynguyenwork14@gmail.com <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i></a>
+                    <a href="https://linkedin.com/in/huy-nguyen14/" target="_blank" rel="noopener noreferrer" title="Click to open LinkedIn" class="icon-linkedin"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://github.com/Senju14" target="_blank" rel="noopener noreferrer" title="Click to open GitHub" class="icon-github"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://huggingface.co/522H0134-NguyenNhatHuy" target="_blank" rel="noopener noreferrer" title="Click to open Hugging Face" class="icon-hf">
+                        <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Hugging Face">
+                    </a>
+                </div>
+            </header>
+
+            <div class="tabs">
+                <a href="/" class={`tab-btn ${currentTab === 'Bio' ? 'active' : ''}`} style="text-decoration: none; display: inline-block;">Bio</a>
+                <a href="/blog" class={`tab-btn ${currentTab === 'Blog' ? 'active' : ''}`} style="text-decoration: none; display: inline-block;">Blog</a>
+            </div>
+
+            <slot />
+
+            <footer>
+                <p>&copy; 2026 Nguyen Nhat Huy. All rights reserved.</p>
+            </footer>
+        </main>
+    </div>
+
+    <button id="goTopBtn" class="go-top-btn" type="button" aria-label="Go to top" title="Go to top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <script is:inline>
+        (function () {
+            var goTopBtn = document.getElementById('goTopBtn');
+            if (!goTopBtn) return;
+            function updateGoTopButton() {
+                var showOnMobile = window.innerWidth <= 850 && window.scrollY > 220;
+                goTopBtn.classList.toggle('show', showOnMobile);
+            }
+            goTopBtn.addEventListener('click', function () {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            window.addEventListener('scroll', updateGoTopButton);
+            window.addEventListener('resize', updateGoTopButton);
+            updateGoTopButton();
+        })();
+
+        // Dark Mode Logic
+        const themeToggle = document.getElementById('darkModeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        if (document.documentElement.getAttribute('data-theme') === 'dark') {
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            if (document.documentElement.getAttribute('data-theme') === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+            }
+        });
+
+        // Scroll Animation Logic
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section, .blog-post, .blog-card').forEach(el => {
+            el.classList.add('fade-in-section');
+            observer.observe(el);
+        });
+
+        // Typewriter Effect (EDIT WORDS HERE)
+        const roles = [
+            "AI / Machine Learning Engineer", 
+            "NLP Researcher", 
+            "RAG System Developer", 
+            "AI Developer"
+        ];
+        
+        let roleIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typewriterElement = document.getElementById("typewriter");
+
+        function type() {
+            if (!typewriterElement) return;
+            const currentRole = roles[roleIndex];
+            
+            if (isDeleting) {
+                typewriterElement.textContent = currentRole.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typewriterElement.textContent = currentRole.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === currentRole.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                roleIndex = (roleIndex + 1) % roles.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(type, typeSpeed);
+        }
+
+        if (typewriterElement) {
+            setTimeout(type, 1000);
+        }
+    </script>
+</body>
+</html>
