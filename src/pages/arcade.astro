@@ -1,0 +1,715 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Arcade | Games" currentTab="Arcade">
+    <div id="Arcade" class="tab-content active-tab" style="display: block;">
+        <div class="arcade-container">
+            <div class="arcade-header">
+                <h2 class="arcade-title">🎮 Retro Arcade</h2>
+                <p>Relax and play some classic games! Choose a game below.</p>
+            </div>
+
+            <!-- Game Switcher Tabs -->
+            <div class="game-switcher">
+                <button class="game-tab-btn active" data-game="snake">🐍 Snake</button>
+                <button class="game-tab-btn" data-game="tictactoe">✖️ Tic-Tac-Toe</button>
+                <button class="game-tab-btn" data-game="pong">🏓 Pong</button>
+            </div>
+
+            <!-- GAME 1: SNAKE -->
+            <div id="snakeSection" class="game-section active">
+                <div class="arcade-scoreboard">
+                    <span>Score: <span id="snakeScore">0</span></span>
+                    <span>High Score: <span id="snakeHighScore">0</span></span>
+                </div>
+                <div class="canvas-wrapper">
+                    <canvas id="snakeCanvas" width="400" height="400"></canvas>
+                    <div id="snakeOverlay" class="game-overlay">
+                        <h3>Snake Game</h3>
+                        <p>Press the button below or SPACE to start</p>
+                        <button id="snakePlayBtn" class="play-btn">Play Snake</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GAME 2: TIC-TAC-TOE -->
+            <div id="tictactoeSection" class="game-section">
+                <div class="arcade-scoreboard">
+                    <span id="tictactoeStatus">Your Turn (X)</span>
+                    <span>AI Opponent (O)</span>
+                </div>
+                <div class="canvas-wrapper" style="background: var(--hover-bg); display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <div class="tictactoe-grid" id="tictactoeGrid">
+                        <div class="tictactoe-cell" data-index="0"></div>
+                        <div class="tictactoe-cell" data-index="1"></div>
+                        <div class="tictactoe-cell" data-index="2"></div>
+                        <div class="tictactoe-cell" data-index="3"></div>
+                        <div class="tictactoe-cell" data-index="4"></div>
+                        <div class="tictactoe-cell" data-index="5"></div>
+                        <div class="tictactoe-cell" data-index="6"></div>
+                        <div class="tictactoe-cell" data-index="7"></div>
+                        <div class="tictactoe-cell" data-index="8"></div>
+                    </div>
+                    <div id="tictactoeOverlay" class="game-overlay hidden">
+                        <h3 id="tictactoeResultTitle">Draw!</h3>
+                        <p>Can you beat the minimax AI?</p>
+                        <button id="tictactoePlayBtn" class="play-btn">Play Again</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GAME 3: PONG -->
+            <div id="pongSection" class="game-section">
+                <div class="arcade-scoreboard">
+                    <span>You: <span id="pongPlayerScore">0</span></span>
+                    <span>AI: <span id="pongAIScore">0</span></span>
+                </div>
+                <div class="canvas-wrapper">
+                    <canvas id="pongCanvas" width="400" height="400"></canvas>
+                    <div id="pongOverlay" class="game-overlay">
+                        <h3>Pong Game</h3>
+                        <p>Move mouse/touch to control paddle. First to 5 wins!</p>
+                        <button id="pongPlayBtn" class="play-btn">Play Pong</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shared Virtual controls for Mobile -->
+            <div class="mobile-controls" id="arcadeMobileControls">
+                <div class="control-row">
+                    <button class="dpad-btn" id="dpadUp"><i class="fa-solid fa-chevron-up"></i></button>
+                </div>
+                <div class="control-row">
+                    <button class="dpad-btn" id="dpadLeft"><i class="fa-solid fa-chevron-left"></i></button>
+                    <div style="width: 55px; height: 55px;"></div>
+                    <button class="dpad-btn" id="dpadRight"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+                <div class="control-row">
+                    <button class="dpad-btn" id="dpadDown"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Game Switcher Handler
+        const tabButtons = document.querySelectorAll('.game-tab-btn');
+        const sections = document.querySelectorAll('.game-section');
+        const mobileControls = document.getElementById('arcadeMobileControls');
+        let activeGame = 'snake';
+
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabButtons.forEach(b => b.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+
+                btn.classList.add('active');
+                const game = btn.getAttribute('data-game') || 'snake';
+                activeGame = game;
+                document.getElementById(`${game}Section`)?.classList.add('active');
+
+                // Toggle virtual D-Pad visibility based on game
+                if (mobileControls) {
+                    if (game === 'tictactoe') {
+                        mobileControls.style.display = 'none';
+                    } else {
+                        mobileControls.style.display = 'flex';
+                    }
+                }
+
+                // Stop all playing loops
+                stopSnake();
+                stopPong();
+            });
+        });
+
+        // Theme colors helper
+        function getThemeColors() {
+            const styles = getComputedStyle(document.documentElement);
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            return {
+                bg: isDark ? '#18181b' : '#f4f4f5',
+                grid: isDark ? '#27272a' : '#e4e4e7',
+                accent1: styles.getPropertyValue('--link-hover').trim() || '#3b82f6',
+                accent2: '#8b5cf6', // Violet
+                ball: '#ef4444' // Red
+            };
+        }
+
+        // ==========================================
+        // 1. SNAKE GAME IMPLEMENTATION
+        // ==========================================
+        const sCanvas = document.getElementById('snakeCanvas') as HTMLCanvasElement;
+        const sCtx = sCanvas.getContext('2d') as CanvasRenderingContext2D;
+        const sScoreEl = document.getElementById('snakeScore') as HTMLSpanElement;
+        const sHighScoreEl = document.getElementById('snakeHighScore') as HTMLSpanElement;
+        const sOverlay = document.getElementById('snakeOverlay') as HTMLDivElement;
+        const sPlayBtn = document.getElementById('snakePlayBtn') as HTMLButtonElement;
+
+        const sGrid = 20;
+        const sTileCount = sCanvas.width / sGrid;
+
+        interface Point { x: number; y: number; }
+        let snake: Point[] = [];
+        let apple: Point = { x: 5, y: 5 };
+        let sDx = sGrid;
+        let sDy = 0;
+        let sScore = 0;
+        let sHighScore = parseInt(localStorage.getItem('snakeHighScore') || '0');
+        let snakeLoop: number | null = null;
+        let sIsPlaying = false;
+        let sInputQueue: string[] = [];
+
+        sHighScoreEl.textContent = sHighScore.toString();
+
+        function resetSnake() {
+            snake = [
+                { x: sGrid * 5, y: sGrid * 10 },
+                { x: sGrid * 4, y: sGrid * 10 },
+                { x: sGrid * 3, y: sGrid * 10 }
+            ];
+            sDx = sGrid;
+            sDy = 0;
+            sScore = 0;
+            sScoreEl.textContent = '0';
+            sInputQueue = [];
+            spawnApple();
+        }
+
+        function spawnApple() {
+            apple.x = Math.floor(Math.random() * sTileCount) * sGrid;
+            apple.y = Math.floor(Math.random() * sTileCount) * sGrid;
+            for (let cell of snake) {
+                if (cell.x === apple.x && cell.y === apple.y) {
+                    spawnApple();
+                    break;
+                }
+            }
+        }
+
+        function drawSnake() {
+            const colors = getThemeColors();
+            sCtx.fillStyle = colors.bg;
+            sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
+
+            // Draw grid
+            sCtx.strokeStyle = colors.grid;
+            sCtx.lineWidth = 0.5;
+            for (let i = 0; i < sTileCount; i++) {
+                sCtx.beginPath();
+                sCtx.moveTo(i * sGrid, 0);
+                sCtx.lineTo(i * sGrid, sCanvas.height);
+                sCtx.stroke();
+                sCtx.beginPath();
+                sCtx.moveTo(0, i * sGrid);
+                sCtx.lineTo(sCanvas.width, i * sGrid);
+                sCtx.stroke();
+            }
+
+            // Draw snake
+            snake.forEach((cell, index) => {
+                sCtx.fillStyle = index === 0 ? colors.accent2 : colors.accent1;
+                sCtx.beginPath();
+                sCtx.roundRect(cell.x + 1, cell.y + 1, sGrid - 2, sGrid - 2, 4);
+                sCtx.fill();
+            });
+
+            // Draw apple
+            sCtx.shadowBlur = 8;
+            sCtx.shadowColor = colors.ball;
+            sCtx.fillStyle = colors.ball;
+            sCtx.beginPath();
+            sCtx.arc(apple.x + sGrid/2, apple.y + sGrid/2, sGrid/2 - 2, 0, 2 * Math.PI);
+            sCtx.fill();
+            sCtx.shadowBlur = 0;
+        }
+
+        function updateSnake() {
+            if (!sIsPlaying) return;
+
+            if (sInputQueue.length > 0) {
+                const dir = sInputQueue.shift();
+                if (dir === 'UP' && sDy === 0) { sDx = 0; sDy = -sGrid; }
+                else if (dir === 'DOWN' && sDy === 0) { sDx = 0; sDy = sGrid; }
+                else if (dir === 'LEFT' && sDx === 0) { sDx = -sGrid; sDy = 0; }
+                else if (dir === 'RIGHT' && sDx === 0) { sDx = sGrid; sDy = 0; }
+            }
+
+            const head = { x: snake[0].x + sDx, y: snake[0].y + sDy };
+
+            // Wrap walls
+            if (head.x < 0) head.x = sCanvas.width - sGrid;
+            else if (head.x >= sCanvas.width) head.x = 0;
+            if (head.y < 0) head.y = sCanvas.height - sGrid;
+            else if (head.y >= sCanvas.height) head.y = 0;
+
+            // Self collision
+            for (let cell of snake) {
+                if (head.x === cell.x && head.y === cell.y) {
+                    sIsPlaying = false;
+                    sOverlay.classList.remove('hidden');
+                    sOverlay.querySelector('h3')!.textContent = "Game Over";
+                    sOverlay.querySelector('p')!.textContent = `You scored ${sScore} points!`;
+                    sPlayBtn.textContent = "Restart Snake";
+                    if (snakeLoop) clearInterval(snakeLoop);
+                    return;
+                }
+            }
+
+            snake.unshift(head);
+
+            if (head.x === apple.x && head.y === apple.y) {
+                sScore += 10;
+                sScoreEl.textContent = sScore.toString();
+                if (sScore > sHighScore) {
+                    sHighScore = sScore;
+                    sHighScoreEl.textContent = sHighScore.toString();
+                    localStorage.setItem('snakeHighScore', sHighScore.toString());
+                }
+                spawnApple();
+            } else {
+                snake.pop();
+            }
+        }
+
+        function startSnake() {
+            resetSnake();
+            sIsPlaying = true;
+            sOverlay.classList.add('hidden');
+            if (snakeLoop) clearInterval(snakeLoop);
+            snakeLoop = setInterval(() => {
+                updateSnake();
+                drawSnake();
+            }, 100) as unknown as number;
+        }
+
+        function stopSnake() {
+            sIsPlaying = false;
+            if (snakeLoop) {
+                clearInterval(snakeLoop);
+                snakeLoop = null;
+            }
+            sOverlay.classList.remove('hidden');
+            sOverlay.querySelector('h3')!.textContent = "Snake Game";
+            sOverlay.querySelector('p')!.textContent = "Press the button below or SPACE to start";
+            sPlayBtn.textContent = "Play Snake";
+        }
+
+        sPlayBtn.addEventListener('click', startSnake);
+
+        // ==========================================
+        // 2. TIC-TAC-TOE GAME IMPLEMENTATION (UNBEATABLE MINIMAX AI)
+        // ==========================================
+        const tGrid = document.getElementById('tictactoeGrid') as HTMLDivElement;
+        const tCells = document.querySelectorAll('.tictactoe-cell');
+        const tStatus = document.getElementById('tictactoeStatus') as HTMLSpanElement;
+        const tOverlay = document.getElementById('tictactoeOverlay') as HTMLDivElement;
+        const tPlayBtn = document.getElementById('tictactoePlayBtn') as HTMLButtonElement;
+
+        let board = ['', '', '', '', '', '', '', '', ''];
+        let tIsPlaying = true;
+
+        const winPatterns = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Cols
+            [0, 4, 8], [2, 4, 6]             // Diagonals
+        ];
+
+        function checkWinner(state: string[]) {
+            for (let pattern of winPatterns) {
+                const [a, b, c] = pattern;
+                if (state[a] && state[a] === state[b] && state[a] === state[c]) {
+                    return { winner: state[a], pattern };
+                }
+            }
+            if (state.every(cell => cell !== '')) return { winner: 'tie' };
+            return null;
+        }
+
+        // Minimax AI
+        function minimax(state: string[], depth: number, isMaximizing: boolean): number {
+            const result = checkWinner(state);
+            if (result) {
+                if (result.winner === 'O') return 10 - depth;
+                if (result.winner === 'X') return depth - 10;
+                return 0;
+            }
+
+            if (isMaximizing) {
+                let bestScore = -Infinity;
+                for (let i = 0; i < 9; i++) {
+                    if (state[i] === '') {
+                        state[i] = 'O';
+                        let score = minimax(state, depth + 1, false);
+                        state[i] = '';
+                        bestScore = Math.max(score, bestScore);
+                    }
+                }
+                return bestScore;
+            } else {
+                let bestScore = Infinity;
+                for (let i = 0; i < 9; i++) {
+                    if (state[i] === '') {
+                        state[i] = 'X';
+                        let score = minimax(state, depth + 1, true);
+                        state[i] = '';
+                        bestScore = Math.min(score, bestScore);
+                    }
+                }
+                return bestScore;
+            }
+        }
+
+        function makeAIMove() {
+            let bestScore = -Infinity;
+            let move = -1;
+
+            for (let i = 0; i < 9; i++) {
+                if (board[i] === '') {
+                    board[i] = 'O';
+                    let score = minimax(board, 0, false);
+                    board[i] = '';
+                    if (score > bestScore) {
+                        bestScore = score;
+                        move = i;
+                    }
+                }
+            }
+
+            if (move !== -1) {
+                board[move] = 'O';
+                const cell = tCells[move] as HTMLDivElement;
+                cell.textContent = 'O';
+                cell.classList.add('occupied', 'o-player');
+                
+                const result = checkWinner(board);
+                if (result) {
+                    endTictactoe(result.winner, result.pattern);
+                } else {
+                    tStatus.textContent = "Your Turn (X)";
+                }
+            }
+        }
+
+        function endTictactoe(winner: string, pattern?: number[]) {
+            tIsPlaying = false;
+            tOverlay.classList.remove('hidden');
+
+            const title = tOverlay.querySelector('h3')!;
+            if (winner === 'X') {
+                title.textContent = "You Win! 🎉";
+                title.style.color = '#4ade80';
+            } else if (winner === 'O') {
+                title.textContent = "AI Wins! 🤖";
+                title.style.color = '#ef4444';
+            } else {
+                title.textContent = "It's a Tie! 🤝";
+                title.style.color = '#fff';
+            }
+
+            if (pattern) {
+                pattern.forEach(idx => {
+                    tCells[idx].classList.add('winning-cell');
+                });
+            }
+        }
+
+        function resetTictactoe() {
+            board = ['', '', '', '', '', '', '', '', ''];
+            tIsPlaying = true;
+            tOverlay.classList.add('hidden');
+            tStatus.textContent = "Your Turn (X)";
+            tCells.forEach(cell => {
+                cell.textContent = '';
+                cell.className = 'tictactoe-cell';
+            });
+        }
+
+        tCells.forEach(cell => {
+            cell.addEventListener('click', () => {
+                if (!tIsPlaying) return;
+                const idx = parseInt(cell.getAttribute('data-index') || '0');
+                if (board[idx] !== '') return;
+
+                // Player Move
+                board[idx] = 'X';
+                cell.textContent = 'X';
+                cell.classList.add('occupied', 'x-player');
+
+                const result = checkWinner(board);
+                if (result) {
+                    endTictactoe(result.winner, result.pattern);
+                } else {
+                    tStatus.textContent = "AI is thinking...";
+                    setTimeout(makeAIMove, 400);
+                }
+            });
+        });
+
+        tPlayBtn.addEventListener('click', resetTictactoe);
+
+        // ==========================================
+        // 3. PONG GAME IMPLEMENTATION
+        // ==========================================
+        const pCanvas = document.getElementById('pongCanvas') as HTMLCanvasElement;
+        const pCtx = pCanvas.getContext('2d') as CanvasRenderingContext2D;
+        const pScorePlayerEl = document.getElementById('pongPlayerScore') as HTMLSpanElement;
+        const pScoreAIEl = document.getElementById('pongAIScore') as HTMLSpanElement;
+        const pOverlay = document.getElementById('pongOverlay') as HTMLDivElement;
+        const pPlayBtn = document.getElementById('pongPlayBtn') as HTMLButtonElement;
+
+        let pLoop: number | null = null;
+        let pIsPlaying = false;
+
+        const paddleWidth = 10;
+        const paddleHeight = 80;
+        let playerY = pCanvas.height / 2 - paddleHeight / 2;
+        let aiY = pCanvas.height / 2 - paddleHeight / 2;
+        const paddleSpeed = 6;
+
+        let ballX = pCanvas.width / 2;
+        let ballY = pCanvas.height / 2;
+        let ballSpeedX = 4;
+        let ballSpeedY = 2;
+        const ballRadius = 6;
+
+        let playerScore = 0;
+        let aiScore = 0;
+
+        // Tracks keys for mobile/desktop inputs
+        let pKeys = { up: false, down: false };
+
+        function resetBall() {
+            ballX = pCanvas.width / 2;
+            ballY = pCanvas.height / 2;
+            ballSpeedX = -ballSpeedX;
+            ballSpeedY = (Math.random() > 0.5 ? 1 : -1) * (2 + Math.random() * 2);
+        }
+
+        function drawPong() {
+            const colors = getThemeColors();
+            // Bg
+            pCtx.fillStyle = colors.bg;
+            pCtx.fillRect(0, 0, pCanvas.width, pCanvas.height);
+
+            // Center dotted line
+            pCtx.strokeStyle = colors.grid;
+            pCtx.lineWidth = 2;
+            pCtx.setLineDash([10, 10]);
+            pCtx.beginPath();
+            pCtx.moveTo(pCanvas.width / 2, 0);
+            pCtx.lineTo(pCanvas.width / 2, pCanvas.height);
+            pCtx.stroke();
+            pCtx.setLineDash([]); // Reset
+
+            // Left Paddle (Player)
+            pCtx.fillStyle = colors.accent1;
+            pCtx.fillRect(10, playerY, paddleWidth, paddleHeight);
+
+            // Right Paddle (AI)
+            pCtx.fillStyle = colors.accent2;
+            pCtx.fillRect(pCanvas.width - 20, aiY, paddleWidth, paddleHeight);
+
+            // Ball
+            pCtx.fillStyle = colors.ball;
+            pCtx.beginPath();
+            pCtx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+            pCtx.fill();
+        }
+
+        function updatePong() {
+            if (!pIsPlaying) return;
+
+            // Player movement
+            if (pKeys.up) playerY = Math.max(0, playerY - paddleSpeed);
+            if (pKeys.down) playerY = Math.min(pCanvas.height - paddleHeight, playerY + paddleSpeed);
+
+            // Simple AI movement tracking the ball
+            const aiTarget = ballY - paddleHeight / 2;
+            const aiDiff = aiTarget - aiY;
+            const aiMaxSpeed = 4.2; // Slightly slower than player so it is beatable
+            if (Math.abs(aiDiff) > 5) {
+                if (aiDiff > 0) aiY = Math.min(pCanvas.height - paddleHeight, aiY + aiMaxSpeed);
+                else aiY = Math.max(0, aiY - aiMaxSpeed);
+            }
+
+            // Ball movement
+            ballX += ballSpeedX;
+            ballY += ballSpeedY;
+
+            // Bounce on wall
+            if (ballY - ballRadius <= 0 || ballY + ballRadius >= pCanvas.height) {
+                ballSpeedY = -ballSpeedY;
+            }
+
+            // Paddle collisions
+            // Left paddle
+            if (ballX - ballRadius <= 20 && ballX + ballRadius >= 10) {
+                if (ballY >= playerY && ballY <= playerY + paddleHeight) {
+                    ballSpeedX = Math.abs(ballSpeedX) + 0.5; // Speed up
+                    // Add angle shift depending on where the ball hits the paddle
+                    const hitPos = (ballY - (playerY + paddleHeight/2)) / (paddleHeight/2);
+                    ballSpeedY = hitPos * 4;
+                }
+            }
+
+            // Right paddle
+            if (ballX + ballRadius >= pCanvas.width - 20 && ballX - ballRadius <= pCanvas.width - 10) {
+                if (ballY >= aiY && ballY <= aiY + paddleHeight) {
+                    ballSpeedX = -(Math.abs(ballSpeedX) + 0.5);
+                    const hitPos = (ballY - (aiY + paddleHeight/2)) / (paddleHeight/2);
+                    ballSpeedY = hitPos * 4;
+                }
+            }
+
+            // Out of bounds score
+            if (ballX - ballRadius < 0) { // AI score
+                aiScore++;
+                pScoreAIEl.textContent = aiScore.toString();
+                if (aiScore >= 5) {
+                    endPong(false);
+                } else {
+                    resetBall();
+                }
+            } else if (ballX + ballRadius > pCanvas.width) { // Player score
+                playerScore++;
+                pScorePlayerEl.textContent = playerScore.toString();
+                if (playerScore >= 5) {
+                    endPong(true);
+                } else {
+                    resetBall();
+                }
+            }
+        }
+
+        function endPong(playerWon: boolean) {
+            pIsPlaying = false;
+            if (pLoop) clearInterval(pLoop);
+            pOverlay.classList.remove('hidden');
+            pOverlay.querySelector('h3')!.textContent = playerWon ? "Victory! 🎉" : "AI Defeated You! 🤖";
+            pOverlay.querySelector('p')!.textContent = `Score: ${playerScore} - ${aiScore}`;
+            pPlayBtn.textContent = "Play Again";
+        }
+
+        function startPong() {
+            playerScore = 0;
+            aiScore = 0;
+            pScorePlayerEl.textContent = '0';
+            pScoreAIEl.textContent = '0';
+            pIsPlaying = true;
+            pOverlay.classList.add('hidden');
+            resetBall();
+
+            if (pLoop) clearInterval(pLoop);
+            pLoop = setInterval(() => {
+                updatePong();
+                drawPong();
+            }, 1000/60) as unknown as number; // 60 FPS update
+        }
+
+        function stopPong() {
+            pIsPlaying = false;
+            if (pLoop) {
+                clearInterval(pLoop);
+                pLoop = null;
+            }
+            pOverlay.classList.remove('hidden');
+            pOverlay.querySelector('h3')!.textContent = "Pong Game";
+            pOverlay.querySelector('p')!.textContent = "Move mouse/touch to control paddle. First to 5 wins!";
+            pPlayBtn.textContent = "Play Pong";
+        }
+
+        pPlayBtn.addEventListener('click', startPong);
+
+        // Pong mouse movement tracking for player
+        pCanvas.addEventListener('mousemove', (e) => {
+            if (!pIsPlaying) return;
+            const rect = pCanvas.getBoundingClientRect();
+            const relativeY = e.clientY - rect.top;
+            playerY = Math.max(0, Math.min(pCanvas.height - paddleHeight, relativeY - paddleHeight/2));
+        });
+
+        // Touch control for mobile
+        pCanvas.addEventListener('touchmove', (e) => {
+            if (!pIsPlaying) return;
+            e.preventDefault();
+            const rect = pCanvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            const relativeY = touch.clientY - rect.top;
+            playerY = Math.max(0, Math.min(pCanvas.height - paddleHeight, relativeY - paddleHeight/2));
+        }, { passive: false });
+
+        // ==========================================
+        // INPUT HANDLERS (KEYBOARD & DPAD)
+        // ==========================================
+        window.addEventListener('keydown', (e) => {
+            if (activeGame === 'snake') {
+                if (e.code === 'ArrowUp' || e.code === 'KeyW') sInputQueue.push('UP');
+                else if (e.code === 'ArrowDown' || e.code === 'KeyS') sInputQueue.push('DOWN');
+                else if (e.code === 'ArrowLeft' || e.code === 'KeyA') sInputQueue.push('LEFT');
+                else if (e.code === 'ArrowRight' || e.code === 'KeyD') sInputQueue.push('RIGHT');
+            } else if (activeGame === 'pong') {
+                if (e.code === 'ArrowUp' || e.code === 'KeyW') pKeys.up = true;
+                if (e.code === 'ArrowDown' || e.code === 'KeyS') pKeys.down = true;
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (activeGame === 'pong') {
+                if (e.code === 'ArrowUp' || e.code === 'KeyW') pKeys.up = false;
+                if (e.code === 'ArrowDown' || e.code === 'KeyS') pKeys.down = false;
+            }
+        });
+
+        // Mobile Controls hooks
+        const dUp = document.getElementById('dpadUp') as HTMLButtonElement;
+        const dDown = document.getElementById('dpadDown') as HTMLButtonElement;
+        const dLeft = document.getElementById('dpadLeft') as HTMLButtonElement;
+        const dRight = document.getElementById('dpadRight') as HTMLButtonElement;
+
+        // Press events
+        const startMobileDir = (dir: string) => {
+            if (activeGame === 'snake') {
+                sInputQueue.push(dir);
+            } else if (activeGame === 'pong') {
+                if (dir === 'UP') pKeys.up = true;
+                if (dir === 'DOWN') pKeys.down = true;
+            }
+        };
+
+        const stopMobileDir = (dir: string) => {
+            if (activeGame === 'pong') {
+                if (dir === 'UP') pKeys.up = false;
+                if (dir === 'DOWN') pKeys.down = false;
+            }
+        };
+
+        dUp.addEventListener('mousedown', () => startMobileDir('UP'));
+        dUp.addEventListener('mouseup', () => stopMobileDir('UP'));
+        dUp.addEventListener('touchstart', (e) => { e.preventDefault(); startMobileDir('UP'); });
+        dUp.addEventListener('touchend', () => stopMobileDir('UP'));
+
+        dDown.addEventListener('mousedown', () => startMobileDir('DOWN'));
+        dDown.addEventListener('mouseup', () => stopMobileDir('DOWN'));
+        dDown.addEventListener('touchstart', (e) => { e.preventDefault(); startMobileDir('DOWN'); });
+        dDown.addEventListener('touchend', () => stopMobileDir('DOWN'));
+
+        dLeft.addEventListener('mousedown', () => startMobileDir('LEFT'));
+        dRight.addEventListener('mousedown', () => startMobileDir('RIGHT'));
+        dLeft.addEventListener('touchstart', (e) => { e.preventDefault(); startMobileDir('LEFT'); });
+        dRight.addEventListener('touchstart', (e) => { e.preventDefault(); startMobileDir('RIGHT'); });
+
+        // Initial canvas repaints on theme observer
+        const observer = new MutationObserver(() => {
+            drawSnake();
+            drawPong();
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+        // Initial draw
+        drawSnake();
+        drawPong();
+    </script>
+</Layout>

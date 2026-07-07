@@ -50,21 +50,14 @@ const { title, currentTab } = Astro.props;
 </head>
 <body>
     <div class="layout">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <h3 class="sidebar-title">Contents</h3>
             <nav class="toc">
-                {currentTab === 'Bio' ? (
-                    <>
-                        <a href="#about">About</a>
-                        <a href="#education">Education</a>
-                        <a href="#experience">Experience</a>
-                        <a href="#projects">Projects</a>
-                        <a href="#awards">Honors & Awards</a>
-                        <a href="#skills">Skills</a>
-                    </>
-                ) : (
-                    <a href="/">&larr; Back to Bio</a>
-                )}
+                <a href={currentTab === 'Bio' ? '#about' : '/#about'}>About</a>
+                <a href={currentTab === 'Bio' ? '#education' : '/#education'}>Education</a>
+                <a href={currentTab === 'Bio' ? '#journey' : '/#journey'}>Journey</a>
+                <a href={currentTab === 'Bio' ? '#projects' : '/#projects'}>Projects</a>
+                <a href={currentTab === 'Bio' ? '#skills' : '/#skills'}>Skills</a>
             </nav>
         </aside>
 
@@ -74,8 +67,10 @@ const { title, currentTab } = Astro.props;
                     <img src="https://visitor-badge.laobi.icu/badge?page_id=Senju14.github.io" alt="visitor badge" class="visitor-badge">
                 </div>
                 <div class="stat-item">
-                    <i class="fa-regular fa-clock"></i> Last updated: Mar 25, 2026
+                    <i class="fa-regular fa-clock"></i> Last updated: Jul 07, 2026
                 </div>
+
+
                 <button id="darkModeToggle" class="theme-toggle" aria-label="Toggle Dark Mode" title="Toggle Dark Mode">
                     <i class="fa-solid fa-moon"></i>
                 </button>
@@ -99,6 +94,7 @@ const { title, currentTab } = Astro.props;
             <div class="tabs">
                 <a href="/" class={`tab-btn ${currentTab === 'Bio' ? 'active' : ''}`} style="text-decoration: none; display: inline-block;">Bio</a>
                 <a href="/blog" class={`tab-btn ${currentTab === 'Blog' ? 'active' : ''}`} style="text-decoration: none; display: inline-block;">Blog</a>
+                <a href="/arcade" class={`tab-btn ${currentTab === 'Arcade' ? 'active' : ''}`} style="text-decoration: none; display: inline-block;">Arcade</a>
             </div>
 
             <slot />
@@ -109,9 +105,45 @@ const { title, currentTab } = Astro.props;
         </main>
     </div>
 
+    <!-- Hamburger button for mobile sidebar -->
+    <button id="hamburgerBtn" class="hamburger-btn" aria-label="Toggle navigation menu" title="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <!-- Sidebar backdrop overlay -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
     <button id="goTopBtn" class="go-top-btn" type="button" aria-label="Go to top" title="Go to top">
         <i class="fa-solid fa-arrow-up"></i>
     </button>
+
+    <!-- Interactive AI Mascot -->
+    <div class="mascot-container" id="mascotContainer">
+        <div class="mascot-bubble" id="mascotBubble">
+            Hi! I'm Robo-Huy. Click me for a cool developer joke!
+        </div>
+        <div class="mascot-avatar" id="mascotAvatar" aria-label="Mascot avatar">
+            <div class="mascot-notification-dot" id="mascotDot"></div>
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <!-- Body/Head -->
+                <circle cx="50" cy="50" r="40" fill="#3b82f6" stroke="#1d4ed8" stroke-width="4" />
+                <!-- Screen Face -->
+                <rect x="22" y="25" width="56" height="42" rx="10" fill="#1e293b" stroke="#0f172a" stroke-width="3" />
+                <!-- Eyes Background -->
+                <circle cx="38" cy="45" r="10" fill="#0f172a" />
+                <circle cx="62" cy="45" r="10" fill="#0f172a" />
+                <!-- Pupils (Interactive) -->
+                <circle id="leftPupil" class="pupil" cx="38" cy="45" r="4" fill="#60a5fa" />
+                <circle id="rightPupil" class="pupil" cx="62" cy="45" r="4" fill="#60a5fa" />
+                <!-- Mouth -->
+                <path d="M 40 58 Q 50 64 60 58" stroke="#60a5fa" stroke-width="3" fill="none" stroke-linecap="round" />
+                <!-- Antenna -->
+                <line x1="50" y1="10" x2="50" y2="2" stroke="#1d4ed8" stroke-width="4" />
+                <circle cx="50" cy="2" r="4" fill="#ef4444" />
+            </svg>
+        </div>
+    </div>
 
     <script is:inline>
         (function () {
@@ -127,6 +159,59 @@ const { title, currentTab } = Astro.props;
             window.addEventListener('scroll', updateGoTopButton);
             window.addEventListener('resize', updateGoTopButton);
             updateGoTopButton();
+        })();
+        // Hamburger / Sidebar drawer logic
+        (function() {
+            var hamburger = document.getElementById('hamburgerBtn');
+            var sidebar = document.getElementById('sidebar');
+            var overlay = document.getElementById('sidebarOverlay');
+            if (!hamburger || !sidebar || !overlay) return;
+
+            function openSidebar() {
+                sidebar.classList.add('open');
+                hamburger.classList.add('open');
+                overlay.classList.add('visible');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                hamburger.classList.remove('open');
+                overlay.classList.remove('visible');
+                document.body.style.overflow = '';
+            }
+
+            hamburger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (sidebar.classList.contains('open')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+
+            overlay.addEventListener('click', closeSidebar);
+
+            // Close when a nav link is clicked on mobile
+            sidebar.querySelectorAll('.toc a').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 1100) {
+                        closeSidebar();
+                    }
+                });
+            });
+
+            // Close on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeSidebar();
+            });
+
+            // Reset state on resize back to desktop
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 1100) {
+                    closeSidebar();
+                }
+            });
         })();
 
         // Dark Mode Logic
@@ -148,6 +233,71 @@ const { title, currentTab } = Astro.props;
                 themeIcon.classList.replace('fa-moon', 'fa-sun');
             }
         });
+
+        // Interactive Mascot Logic
+        const mascotAvatar = document.getElementById('mascotAvatar');
+        const mascotBubble = document.getElementById('mascotBubble');
+        const leftPupil = document.getElementById('leftPupil');
+        const rightPupil = document.getElementById('rightPupil');
+        const mascotDot = document.getElementById('mascotDot');
+
+        const jokes = [
+            "Why did the neural network go to therapy? It had too many hidden layers! 😂",
+            "I'm training a model to predict if you'll hire me. Spoiler: P(hire) = 0.99! 🚀",
+            "There are 10 types of people: those who understand binary, and those who don't. 💻",
+            "Why do ML engineers love coffee? Because it provides automatic feature boosting! ☕",
+            "Grace Hopper found the first real computer 'bug' (a moth) in 1947. Retro debugging! 🦋",
+            "To understand recursion, you must first understand recursion. 🌀",
+            "AI is 80% data cleaning, 20% model training, and 100% hoping it doesn't overfit! 📊"
+        ];
+
+        let bubbleTimeout;
+
+        function showJoke() {
+            // Remove notification dot on first click
+            if (mascotDot) {
+                mascotDot.style.display = 'none';
+            }
+            const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+            mascotBubble.textContent = randomJoke;
+            mascotBubble.classList.add('show');
+
+            clearTimeout(bubbleTimeout);
+            bubbleTimeout = setTimeout(() => {
+                mascotBubble.classList.remove('show');
+            }, 6000); // hide after 6s
+        }
+
+        if (mascotAvatar && mascotBubble) {
+            mascotAvatar.addEventListener('click', showJoke);
+        }
+
+        // Eye Tracking Logic
+        document.addEventListener('mousemove', (e) => {
+            if (!leftPupil || !rightPupil || !mascotAvatar) return;
+            
+            const avatarRect = mascotAvatar.getBoundingClientRect();
+            const avatarCenterX = avatarRect.left + avatarRect.width / 2;
+            const avatarCenterY = avatarRect.top + avatarRect.height / 2;
+
+            const angle = Math.atan2(e.clientY - avatarCenterY, e.clientX - avatarCenterX);
+            const maxDisplacement = 4;
+            const dx = Math.cos(angle) * maxDisplacement;
+            const dy = Math.sin(angle) * maxDisplacement;
+
+            leftPupil.setAttribute('transform', `translate(${dx}, ${dy})`);
+            rightPupil.setAttribute('transform', `translate(${dx}, ${dy})`);
+        });
+
+        // Show welcome bubble on load after 3s
+        setTimeout(() => {
+            if (mascotBubble) {
+                mascotBubble.classList.add('show');
+                setTimeout(() => {
+                    mascotBubble.classList.remove('show');
+                }, 4000);
+            }
+        }, 3000);
 
         // Scroll Animation Logic
         const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };

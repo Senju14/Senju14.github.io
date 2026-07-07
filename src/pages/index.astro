@@ -23,27 +23,67 @@ import Layout from '../layouts/Layout.astro';
             </div>
         </section>
 
-        <section id="experience">
-            <h2>Experience</h2>
-            <div class="item">
-                <div class="item-header">
-                    <span class="item-title"><a href="https://www.nng.com.vn/blog/welcoming-the-emba-from-foster-school-of-business-at-the-university-of-washington" target="_blank" rel="noopener noreferrer" class="ext-link" title="Click to open external link">AI Intern | NNG Company Limited <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i></a></span>
-                    <span class="item-meta">Aug 2025 – Oct 2025</span>
+        <section id="journey">
+            <h2>My Journey</h2>
+            <div class="timeline-container">
+                <div class="timeline-line">
+                    <div class="timeline-line-fill"></div>
                 </div>
-                <ul>
-                    <li>Researched and explored Retrieval-Augmented Generation (RAG) architectures and their practical applications in business contexts.</li>
-                    <li>Engaged in professional software development workflows and corporate training sessions.</li>
-                </ul>
-            </div>
-            <div class="item">
-                <div class="item-header">
-                    <span class="item-title"><a href="https://sportplus.vn/" target="_blank" rel="noopener noreferrer" class="ext-link" title="Click to open external link">AI Intern | SPORTPLUS JSC <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i></a></span>
-                    <span class="item-meta">Jun 2025 – Jul 2025</span>
+
+                <!-- Milestone 1 -->
+                <div class="timeline-item left">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <span class="timeline-date">Aug 2025 – Oct 2025</span>
+                        <h3>AI Intern</h3>
+                        <h4>NNG Company Limited</h4>
+                        <ul>
+                            <li>Researched and explored Retrieval-Augmented Generation (RAG) architectures and their practical applications in business contexts.</li>
+                            <li>Engaged in professional software development workflows and corporate training sessions.</li>
+                        </ul>
+                    </div>
                 </div>
-                <ul>
-                    <li>Developed a data crawling tool using Python to extract player performance scores from the DUPR sports application.</li>
-                    <li>Processed and structured extracted raw data to align with machine learning preprocessing requirements.</li>
-                </ul>
+
+                <!-- Milestone 2 -->
+                <div class="timeline-item right">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <span class="timeline-date">Jun 2025 – Jul 2025</span>
+                        <h3>AI Intern</h3>
+                        <h4>SPORTPLUS JSC</h4>
+                        <ul>
+                            <li>Developed a data crawling tool using Python to extract player performance scores from the DUPR sports application.</li>
+                            <li>Processed and structured extracted raw data to align with machine learning preprocessing requirements.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Milestone 3 -->
+                <div class="timeline-item left">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <span class="timeline-date">2025</span>
+                        <h3>Second Prize</h3>
+                        <h4>Vietnam Student AI Olympiad</h4>
+                        <ul>
+                            <li>Demonstrated advanced logical thinking and practical problem-solving in a highly competitive national-level AI modeling competition.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Milestone 4 -->
+                <div class="timeline-item right">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <span class="timeline-date">2024</span>
+                        <h3>Scientific Research Award</h3>
+                        <h4>Ton Duc Thang University</h4>
+                        <ul>
+                            <li>Recognized for outstanding NLP research by building a Vietnamese Tourism Q&A dataset (SQUAD 2.0 format).</li>
+                            <li>Fine-tuned RoBERTa and PhoBERT models to enhance machine reading comprehension performance.</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -58,6 +98,22 @@ import Layout from '../layouts/Layout.astro';
                     <li>Building a real-time academic lecture transcription and translation application (Vietnamese/English).</li>
                     <li>Developing a live audio streaming pipeline utilizing FastAPI, WebSockets, and Silero VAD for efficient audio segmentation.</li>
                     <li>Integrating WhisperX and NLLB models, deploying on Modal serverless GPUs for high-speed inference.</li>
+                </ul>
+            </div>
+            <div class="item">
+                <div class="item-header">
+                    <span class="item-title">
+                        <a href="https://github.com/Thundercok/VRPTW-Research-Optimization/tree/demo-release" target="_blank" rel="noopener noreferrer" class="ext-link" title="Click to open GitHub repository">
+                            VRPTW Research Optimization System <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i>
+                        </a>
+                    </span>
+                    <span class="item-meta">Research & Optimization</span>
+                </div>
+                <ul>
+                    <li>Developed an interactive web portal for solving the Vehicle Routing Problem with Time Windows (VRPTW) utilizing Solomon datasets.</li>
+                    <li>Designed and implemented a dynamic frontend dashboard featuring route map visualizations, metrics panels, and a Gantt chart scheduler.</li>
+                    <li>Integrated robust backend solver connectivity for real-time heuristics computation and route dispatch optimization.</li>
+                    <li><strong>Live Demo:</strong> <a href="https://vrptw.onrender.com" target="_blank" rel="noopener noreferrer" class="ext-link highlight-demo" title="Click to open live demo">vrptw.onrender.com <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i></a></li>
                 </ul>
             </div>
             <div class="item">
@@ -94,29 +150,6 @@ import Layout from '../layouts/Layout.astro';
             </div>
         </section>
 
-        <section id="awards">
-            <h2>Honors & Awards</h2>
-            <div class="item">
-                <div class="item-header">
-                    <span class="item-title"><a href="https://it.tdtu.edu.vn/truong-dai-hoc-ton-duc-thang-dat-giai-nhi-tai-olympic-tri-tue-nhan-tao-sinh-vien-viet-nam-lan-thu" target="_blank" rel="noopener noreferrer" class="ext-link" title="Click to open award link">Second Prize | Vietnam Student AI Olympiad <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i></a></span>
-                    <span class="item-meta">2025</span>
-                </div>
-                <ul>
-                    <li>Demonstrated advanced logical thinking and practical problem-solving in a highly competitive national-level AI modeling competition.</li>
-                </ul>
-            </div>
-            <div class="item">
-                <div class="item-header">
-                    <span class="item-title"><a href="https://it.tdtu.edu.vn/trien-lam2425/17" target="_blank" rel="noopener noreferrer" class="ext-link" title="Click to open award link">Scientific Research Award | Ton Duc Thang University <i class="fa-solid fa-up-right-from-square link-indicator" aria-hidden="true"></i></a></span>
-                    <span class="item-meta">2024</span>
-                </div>
-                <ul>
-                    <li>Recognized for outstanding NLP research by building a Vietnamese Tourism Q&A dataset (SQUAD 2.0 format).</li>
-                    <li>Fine-tuned RoBERTa and PhoBERT models to enhance machine reading comprehension performance.</li>
-                </ul>
-            </div>
-        </section>
-
         <section id="skills">
             <h2>Skills</h2>
             <div class="skills-grid">
@@ -137,4 +170,48 @@ import Layout from '../layouts/Layout.astro';
             </div>
         </section>
     </div>
+
+    <script>
+        // Scrollytelling Timeline Logic
+        const timelineContainer = document.querySelector('.timeline-container');
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        const lineFill = document.querySelector('.timeline-line-fill');
+
+        function updateTimeline() {
+            if (!timelineContainer || !lineFill) return;
+            
+            const rect = timelineContainer.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            
+            // Calculate the trigger point (middle of the viewport)
+            const triggerPoint = viewportHeight / 2;
+            
+            // Progress calculation
+            const containerHeight = rect.height;
+            const scrolledDistance = triggerPoint - rect.top;
+            
+            let progress = (scrolledDistance / containerHeight) * 100;
+            progress = Math.max(0, Math.min(100, progress));
+            
+            // Set the fill height
+            (lineFill as HTMLElement).style.height = `${progress}%`;
+            
+            // Toggle active state for milestone cards
+            timelineItems.forEach(item => {
+                const itemRect = item.getBoundingClientRect();
+                if (itemRect.top < triggerPoint) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        // Add event listeners for scroll and resize
+        window.addEventListener('scroll', updateTimeline);
+        window.addEventListener('resize', updateTimeline);
+        
+        // Initial call after component mount
+        setTimeout(updateTimeline, 200);
+    </script>
 </Layout>
