@@ -270,7 +270,13 @@ const { title, currentTab } = Astro.props;
 
         if (mascotAvatar && mascotBubble) {
             mascotAvatar.addEventListener('click', showJoke);
+            // Also support tap on mobile
+            mascotAvatar.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                showJoke();
+            }, { passive: false });
         }
+
 
         // Eye Tracking Logic
         document.addEventListener('mousemove', (e) => {
